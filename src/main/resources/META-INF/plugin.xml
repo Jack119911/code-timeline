@@ -1,0 +1,25 @@
+<idea-plugin>
+    <id>de.ur.mi.code-timeline</id>
+    <name>Code Timeline</name>
+    <vendor email="" url=""></vendor>
+
+    <description><![CDATA[
+    A visualization for code showing how methods are interacting with each other.
+    It uses the metaphor of a timeline like it is used by video editing software.
+    The plugin targets novice programmers to improve their code-comprehension.
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>

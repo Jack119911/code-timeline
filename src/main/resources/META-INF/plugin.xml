@@ -16,7 +16,7 @@
     -->
 
     <extensions defaultExtensionNs="com.intellij">
-        <!-- Add your extensions here -->
+        <toolWindow id="Timeline" anchor="bottom" factoryClass="TimelineToolWindow"/>
     </extensions>
 
     <actions>

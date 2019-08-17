@@ -21,25 +21,25 @@ public class CallGraphNode {
         this.children.add(childToAdd);
     }
 
-    String subTreeToString(int dept) {
+    String subTreeToString(int depth) {
         StringBuilder builder = new StringBuilder();
 
-        addSelfToStringBuilder(dept, builder);
-        addChildrenToStringBuilder(dept, builder);
+        addSelfToStringBuilder(depth, builder);
+        addChildrenToStringBuilder(depth, builder);
 
         return builder.toString();
     }
 
-    private void addSelfToStringBuilder(int dept, StringBuilder builder) {
-        for (int i = 0; i < dept; i++) {
+    private void addSelfToStringBuilder(int depth, StringBuilder builder) {
+        for (int i = 0; i < depth; i++) {
             builder.append("\t");
         }
         builder.append(methodName).append("\n");
     }
 
-    private void addChildrenToStringBuilder(int dept, StringBuilder builder) {
+    private void addChildrenToStringBuilder(int depth, StringBuilder builder) {
         for (CallGraphNode child : children) {
-            builder.append(child.subTreeToString(dept + 1));
+            builder.append(child.subTreeToString(depth + 1));
         }
     }
 

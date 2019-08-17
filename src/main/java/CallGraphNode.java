@@ -4,9 +4,11 @@ public class CallGraphNode {
 
     private ArrayList<CallGraphNode> children = new ArrayList<>();
     private String methodName;
+    private NodeVisualization visualization;
 
     CallGraphNode(String methodName) {
         this.methodName = methodName;
+        this.visualization = new DefaultNodeVisualization(methodName);
     }
 
     ArrayList<CallGraphNode> getChildren() {
@@ -19,6 +21,10 @@ public class CallGraphNode {
 
     void addChild(CallGraphNode childToAdd) {
         this.children.add(childToAdd);
+    }
+
+    NodeVisualization getVisualization() {
+        return visualization;
     }
 
     int getSubTreeDepth() {

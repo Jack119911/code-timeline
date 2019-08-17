@@ -1,12 +1,11 @@
 import com.intellij.psi.PsiElement;
-import org.apache.commons.lang.NotImplementedException;
 
 public class CallGraphGenerator {
 
     private CallGraphGenerator() {}
 
     public static CallGraph generateCallGraph(PsiElement rootPsiElement) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     static CallGraph generateMockCallGraph() {

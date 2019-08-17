@@ -5,6 +5,7 @@ public class CallGraphNode {
     private ArrayList<CallGraphNode> children = new ArrayList<>();
     private String methodName;
     private NodeVisualization visualization;
+    private int necessarySpace;
 
     CallGraphNode(String methodName) {
         this.methodName = methodName;
@@ -25,6 +26,21 @@ public class CallGraphNode {
 
     NodeVisualization getVisualization() {
         return visualization;
+    }
+
+    int getNecessarySpace() {
+        return necessarySpace;
+    }
+
+    void updateNecessarySpaceInSubTree() {
+        if (children.isEmpty()) necessarySpace = 1;
+        else {
+            necessarySpace = 0;
+            for (CallGraphNode child : children) {
+                child.updateNecessarySpaceInSubTree();
+                necessarySpace += child.getNecessarySpace();
+            }
+        }
     }
 
     int getSubTreeDepth() {
@@ -53,7 +69,7 @@ public class CallGraphNode {
         for (int i = 0; i < depth; i++) {
             builder.append("\t");
         }
-        builder.append(methodName).append("\n");
+        builder.append(methodName).append(" (").append(necessarySpace).append(")").append("\n");
     }
 
     private void addChildrenToStringBuilder(int depth, StringBuilder builder) {

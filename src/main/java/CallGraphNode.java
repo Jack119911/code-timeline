@@ -21,6 +21,19 @@ public class CallGraphNode {
         this.children.add(childToAdd);
     }
 
+    int getSubTreeDepth() {
+        int subTreeDepth = 1;
+
+        int maxChildSubTreeDepth = 0;
+        for (CallGraphNode child : children) {
+            int childTreeDepth = child.getSubTreeDepth();
+            if (childTreeDepth > maxChildSubTreeDepth) maxChildSubTreeDepth = childTreeDepth;
+        }
+        subTreeDepth += maxChildSubTreeDepth;
+
+        return subTreeDepth;
+    }
+
     String subTreeToString(int depth) {
         StringBuilder builder = new StringBuilder();
 

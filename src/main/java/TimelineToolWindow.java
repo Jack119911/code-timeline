@@ -9,6 +9,7 @@ public class TimelineToolWindow implements ToolWindowFactory {
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         CallGraph callGraph = CallGraphGenerator.generateMockCallGraph();
         System.out.println(callGraph);
+        System.out.println(callGraph.getGraphDepth());
     }
 
 }

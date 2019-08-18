@@ -14,12 +14,16 @@
     <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
     -->
+    <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Timeline" anchor="bottom" factoryClass="TimelineToolWindow"/>
+        <toolWindow id="Timeline" anchor="bottom" factoryClass="TimelineToolWindowFactory"/>
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
+        <action id="RootMethodSelection" class="SelectMethodAction" text="Select for Timeline" description="Select this Method as Root for the Timeline">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>
+        </action>
     </actions>
+
 </idea-plugin>

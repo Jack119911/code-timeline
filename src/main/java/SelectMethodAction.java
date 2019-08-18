@@ -5,7 +5,6 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiMethod;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,7 +12,7 @@ public class SelectMethodAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        final PsiElement psiElement = e.getData(CommonDataKeys.PSI_ELEMENT);
+        final PsiMethod psiElement = (PsiMethod) e.getData(CommonDataKeys.PSI_ELEMENT);
         ToolWindow timeline = ToolWindowManager.getInstance(e.getProject()).getToolWindow("Timeline");
         TimelineToolWindowFactory factory = new TimelineToolWindowFactory();
         factory.createToolWindowContent(e.getProject(), timeline);

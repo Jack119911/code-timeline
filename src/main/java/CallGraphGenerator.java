@@ -1,11 +1,37 @@
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 
-public class CallGraphGenerator {
+import java.util.Collection;
+
+class CallGraphGenerator {
 
     private CallGraphGenerator() {}
 
-    public static CallGraph generateCallGraph(PsiElement rootPsiElement) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    static CallGraph generateCallGraph(PsiMethod rootMethod) {
+        CallGraphNode rootNode = createNodeFromMethod(rootMethod);
+        PsiClass containingClass = rootMethod.getContainingClass();
+        buildTreeForCallHierarchy(rootMethod, rootNode, containingClass);
+        return new CallGraph(rootNode);
+    }
+
+    private static CallGraphNode createNodeFromMethod(PsiMethod method) {
+        return new CallGraphNode(method.getName());
+    }
+
+    private static void buildTreeForCallHierarchy(PsiMethod rootMethod, CallGraphNode rootNode, PsiClass classToBuildTreeFor) {
+        Collection<PsiMethodCallExpression> children = PsiTreeUtil.findChildrenOfAnyType(rootMethod, true, PsiMethodCallExpression.class);
+        for (PsiMethodCallExpression childMethodCall : children) {
+            processChildMethodCall(childMethodCall, rootNode, classToBuildTreeFor);
+        }
+    }
+
+    private static void processChildMethodCall(PsiMethodCallExpression childMethodCall, CallGraphNode parentNode, PsiClass classToBuildTreeFor) {
+        PsiMethod childMethod = childMethodCall.resolveMethod();
+        if (childMethod != null && childMethod.getContainingClass() == classToBuildTreeFor) {
+            CallGraphNode childNode = createNodeFromMethod(childMethod);
+            parentNode.addChild(childNode);
+            buildTreeForCallHierarchy(childMethod, childNode, classToBuildTreeFor);
+        }
     }
 
     static CallGraph generateMockCallGraph() {

@@ -25,7 +25,6 @@ public class CallGraph {
         Component component = node.getVisualization().getComponent();
         GridBagConstraints constraints = createConstraints(node, nodeDepthLevel, xPosition);
         panel.add(component, constraints);
-        System.out.println(node + ": " + xPosition);
     }
 
     @NotNull

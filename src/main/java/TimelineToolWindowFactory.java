@@ -1,7 +1,10 @@
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiMethod;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
@@ -30,13 +33,10 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
         toolWindow.show(null);
     }
 
-    public void visualizeCallHierarchy(PsiElement rootElement) {
-        //CallGraph callGraph = CallGraphGenerator.generateCallGraph(rootElement);
-        System.out.println(rootElement);
-        CallGraph callGraph = CallGraphGenerator.generateMockCallGraph();
-        System.out.println(callGraph);
-        System.out.println(callGraph.getGraphDepth());
-
+    void visualizeCallHierarchy(PsiMethod rootMethod) {
+        CallGraph callGraph = ProgressManager.getInstance().computePrioritized(
+                (ThrowableComputable<CallGraph, ProcessCanceledException>) () -> CallGraphGenerator.generateCallGraph((rootMethod))
+        );
         callGraph.initVisualization(rootView);
     }
 

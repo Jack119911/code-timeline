@@ -3,19 +3,48 @@ import kotlin.random.Random;
 
 import java.awt.*;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 class ColorService {
 
-    private static HashMap<String, JBColor> colorMapping = new HashMap<>();
+    private static final float SATURATION = (float) 0.5;
+    private static final float BRIGHTNESS = (float) 0.8;
+
+    private static HashMap<String, JBColor> distinctColorMapping = new HashMap<>();
+    private static HashMap<String, JBColor> randomColorMapping = new HashMap<>();
 
     private ColorService(){}
 
-    static JBColor getColorForMethodName(String methodName) {
-        if (colorMapping.containsKey(methodName)) {
-            return colorMapping.get(methodName);
+    static JBColor getDistinctColorForMethodName(String methodName) throws Exception {
+        if (distinctColorMapping.containsKey(methodName)) {
+            return distinctColorMapping.get(methodName);
+        } else {
+            throw new NoSuchElementException("No Color for this method. Use iniColors() first");
+        }
+    }
+
+    private static void addDistinctColor(int numOfColors, String methodName) {
+        float step = (float) 1 / numOfColors;
+        float hue = (step * distinctColorMapping.size());
+        int distinctColorRgb = Color.HSBtoRGB(hue, SATURATION, BRIGHTNESS);
+        JBColor distinctColor = new JBColor(distinctColorRgb, distinctColorRgb);
+        distinctColorMapping.put(methodName, distinctColor);
+    }
+
+    static void initColors(String[] methodNames) {
+        distinctColorMapping.clear();
+        randomColorMapping.clear();
+        for (String methodName : methodNames) {
+            addDistinctColor(methodNames.length, methodName);
+        }
+    }
+
+    static JBColor getRandomColorForMethodName(String methodName) {
+        if (randomColorMapping.containsKey(methodName)) {
+            return randomColorMapping.get(methodName);
         } else {
             JBColor randomColor = getRandomColor();
-            colorMapping.put(methodName, randomColor);
+            randomColorMapping.put(methodName, randomColor);
             return randomColor;
         }
     }

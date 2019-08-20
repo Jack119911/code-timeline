@@ -14,7 +14,12 @@ abstract class NodeVisualization {
     }
 
     protected JBColor determineColor() {
-        return ColorService.getColorForMethodName(methodName);
+        try {
+            return ColorService.getDistinctColorForMethodName(methodName);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ColorService.getRandomColorForMethodName(methodName);
+        }
     }
 
     protected abstract void createComponent();

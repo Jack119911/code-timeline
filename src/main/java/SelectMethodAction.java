@@ -15,8 +15,7 @@ public class SelectMethodAction extends AnAction {
         final PsiMethod psiElement = (PsiMethod) e.getData(CommonDataKeys.PSI_ELEMENT);
         ToolWindow timeline = ToolWindowManager.getInstance(e.getProject()).getToolWindow("Timeline");
         TimelineToolWindowFactory factory = new TimelineToolWindowFactory();
-        factory.createToolWindowContent(e.getProject(), timeline);
-        factory.visualizeCallHierarchy(psiElement);
+        factory.visualizeCallHierarchy(timeline, psiElement);
     }
 
     @Override

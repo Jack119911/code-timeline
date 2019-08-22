@@ -9,6 +9,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.psi.*;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
@@ -135,7 +136,9 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
 
     private void initContent(ToolWindow toolWindow) {
         visualizationRootView = new JBPanel(new GridBagLayout());
-        JBScrollPane scrollPane = new JBScrollPane(visualizationRootView);
+        JBPanel wrapper = new JBPanel(new FlowLayout(FlowLayout.LEADING, 10, 10));
+        wrapper.add(visualizationRootView);
+        JBScrollPane scrollPane = new JBScrollPane(wrapper);
         replaceVisualizationContent(scrollPane, toolWindow.getContentManager());
         toolWindow.show(null);
     }

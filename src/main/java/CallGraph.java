@@ -34,7 +34,7 @@ class CallGraph {
         constraints.gridx = xPosition;
         constraints.gridwidth = node.getNecessarySpace();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.weightx = 0.5;
+        //constraints.weightx = 0.5;
         return constraints;
     }
 

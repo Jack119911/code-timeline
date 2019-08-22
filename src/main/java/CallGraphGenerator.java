@@ -1,12 +1,7 @@
-import com.intellij.openapi.application.ReadAction;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 
 class CallGraphGenerator {
 

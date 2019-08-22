@@ -10,12 +10,12 @@ class ColorService {
     private static final float SATURATION = (float) 0.5;
     private static final float BRIGHTNESS = (float) 0.8;
 
-    private static HashMap<String, JBColor> distinctColorMapping = new HashMap<>();
-    private static HashMap<String, JBColor> randomColorMapping = new HashMap<>();
+    private static final HashMap<String, JBColor> distinctColorMapping = new HashMap<>();
+    private static final HashMap<String, JBColor> randomColorMapping = new HashMap<>();
 
     private ColorService(){}
 
-    static JBColor getDistinctColorForMethodName(String methodName) throws Exception {
+    static JBColor getDistinctColorForMethodName(String methodName) throws NoSuchElementException {
         if (distinctColorMapping.containsKey(methodName)) {
             return distinctColorMapping.get(methodName);
         } else {

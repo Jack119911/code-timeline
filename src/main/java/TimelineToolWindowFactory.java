@@ -2,6 +2,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.project.DumbService;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ThrowableComputable;
 import com.intellij.openapi.vfs.VirtualFile;
@@ -13,6 +14,7 @@ import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class TimelineToolWindowFactory implements ToolWindowFactory {
+
+    private static final String MARKER_FOR_ROOT_METHOD = "VisualizationRoot";
 
     private static class NoMethodToVisualizeException extends Exception {
         NoMethodToVisualizeException(String message) {
@@ -32,7 +36,7 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-
+        DumbService.getInstance(project).runWhenSmart(() -> visualizeMostImportantMethod(project, toolWindow));
     }
 
     private void visualizeMostImportantMethod(Project project, ToolWindow toolWindow) {
@@ -81,10 +85,53 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
         }
     }
 
-    private PsiMethod selectMethodToDisplay(PsiMethod[] classMethods) {
-        // ToDo: Select suiting method
-        return classMethods[0];
+    private PsiMethod selectMethodToDisplay(PsiMethod[] classMethods) throws NoMethodToVisualizeException {
+        PsiMethod selectedMethod = getMarkedMethod(classMethods);
+        if (selectedMethod == null) {
+            selectedMethod = getMainMethod(classMethods);
+        }
+        if (selectedMethod == null) {
+            selectedMethod = getFirstMethod(classMethods);
+        }
+        if (selectedMethod == null) {
+            throw new NoMethodToVisualizeException("Class contains no method (or only a constructor)");
+        }
+        return selectedMethod;
     }
+
+    @Nullable
+    private PsiMethod getFirstMethod(PsiMethod[] allPossibleMethods) {
+        for (PsiMethod method : allPossibleMethods) {
+            if (!method.isConstructor()) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private PsiMethod getMainMethod(PsiMethod[] allPossibleMethods) {
+        for (PsiMethod method : allPossibleMethods) {
+            if (method.getName().equals("main")) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private PsiMethod getMarkedMethod(PsiMethod[] allPossibleMethods) {
+        for (PsiMethod method : allPossibleMethods) {
+            PsiCodeBlock codeBlock = method.getBody();
+            if (codeBlock == null) continue;
+            PsiElement possibleComment = codeBlock.getFirstBodyElement();
+            if (possibleComment instanceof PsiComment && possibleComment.getText().contains(MARKER_FOR_ROOT_METHOD)) {
+                return method;
+            }
+        }
+        return null;
+    }
+
 
     private void initContent(ToolWindow toolWindow) {
         visualizationRootView = new JBPanel(new GridBagLayout());

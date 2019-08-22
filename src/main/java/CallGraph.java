@@ -3,9 +3,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-public class CallGraph {
+class CallGraph {
 
-    private CallGraphNode rootNode;
+    private final CallGraphNode rootNode;
 
     CallGraph(CallGraphNode rootNode) {
         this.rootNode = rootNode;

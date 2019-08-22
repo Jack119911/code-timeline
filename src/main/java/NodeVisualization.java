@@ -1,11 +1,12 @@
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
+import java.util.NoSuchElementException;
 
 abstract class NodeVisualization {
 
-    protected String methodName;
-    protected JBColor color;
+    final String methodName;
+    final JBColor color;
 
     NodeVisualization(String methodName) {
         this.methodName = methodName;
@@ -13,10 +14,10 @@ abstract class NodeVisualization {
         createComponent();
     }
 
-    protected JBColor determineColor() {
+    private JBColor determineColor() {
         try {
             return ColorService.getDistinctColorForMethodName(methodName);
-        } catch (Exception e) {
+        } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ColorService.getRandomColorForMethodName(methodName);
         }

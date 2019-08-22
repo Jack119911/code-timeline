@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 
-public class CallGraphNode {
+class CallGraphNode {
 
-    private ArrayList<CallGraphNode> children = new ArrayList<>();
-    private String methodName;
-    private NodeVisualization visualization;
+    private final ArrayList<CallGraphNode> children = new ArrayList<>();
+    private final String methodName;
+    private final NodeVisualization visualization;
     private int necessarySpace;
 
     CallGraphNode(String methodName) {

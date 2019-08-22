@@ -18,7 +18,7 @@ public class DefaultNodeVisualization extends NodeVisualization {
         panel.withBackground(color);
         panel.withPreferredHeight(HEIGHT);
 
-        JBLabel label = new JBLabel(methodName);
+        JBLabel label = new JBLabel(methodName + "()");
         label.setFont(new Font("Serif", Font.PLAIN, 20));
         panel.add(label);
     }

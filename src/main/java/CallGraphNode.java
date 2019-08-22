@@ -6,6 +6,8 @@ class CallGraphNode {
     private final String methodName;
     private final NodeVisualization visualization;
     private int necessarySpace;
+    private int paddingUnitsLeft;
+    private int paddingUnitsRight;
 
     CallGraphNode(String methodName) {
         this.methodName = methodName;
@@ -41,6 +43,33 @@ class CallGraphNode {
                 necessarySpace += child.getNecessarySpace();
             }
         }
+    }
+
+    int getPaddingUnitsLeft() {
+        return paddingUnitsLeft;
+    }
+
+    int getPaddingUnitsRight() {
+        return paddingUnitsRight;
+    }
+
+    void updatePaddingUnitsInSubTree(int ownPaddingUnitsLeft, int ownPaddingUnitsRight) {
+        updateOwnPadding(ownPaddingUnitsLeft, ownPaddingUnitsRight);
+        if (children.size() == 1) {
+            children.get(0).updatePaddingUnitsInSubTree(ownPaddingUnitsLeft + 1, ownPaddingUnitsRight + 1);
+        } else if (children.size() >= 2) {
+            children.get(0).updatePaddingUnitsInSubTree(ownPaddingUnitsLeft + 1, 0);
+            children.get(children.size() - 1).updatePaddingUnitsInSubTree(1, ownPaddingUnitsRight + 1);
+            for (int i = 1; i < children.size() - 1; i++) {
+                children.get(i).updatePaddingUnitsInSubTree(1, 0);
+            }
+        }
+
+    }
+
+    private void updateOwnPadding(int ownPaddingUnitsLeft, int ownPaddingUnitsRight) {
+        paddingUnitsLeft = ownPaddingUnitsLeft;
+        paddingUnitsRight = ownPaddingUnitsRight;
     }
 
     int getSubTreeDepth() {

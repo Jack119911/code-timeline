@@ -13,6 +13,7 @@ class CallGraph {
 
     void initVisualization(JBPanel panel) {
         rootNode.updateNecessarySpaceInSubTree();
+        rootNode.updatePaddingUnitsInSubTree(0, 0);
         initAllNodeVisualizations(panel, rootNode, 0, 0);
     }
 
@@ -34,8 +35,16 @@ class CallGraph {
         constraints.gridx = xPosition;
         constraints.gridwidth = node.getNecessarySpace();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        //constraints.weightx = 0.5;
+        // constraints.weightx = 0.5;
+        addPaddingToConstraints(constraints, node);
         return constraints;
+    }
+
+    private void addPaddingToConstraints(GridBagConstraints constraints, CallGraphNode node) {
+        constraints.insets.top = 1;
+        final int paddingStep = 4;
+        constraints.insets.left = node.getPaddingUnitsLeft() * paddingStep;
+        constraints.insets.right = node.getPaddingUnitsRight() * paddingStep;
     }
 
     private void initVisualizationOfChildren(JBPanel panel, CallGraphNode currentNode, int currentDepthLevel, int xPosition) {

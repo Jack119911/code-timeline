@@ -1,51 +1,59 @@
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 class CallGraphGenerator {
 
+    private static ArrayList<Method> createdMethods = new ArrayList<>();
+
     private CallGraphGenerator() {}
 
-    static CallGraph generateCallGraph(PsiMethod rootMethod) {
-        CallGraphNode rootNode = createNodeFromMethod(rootMethod);
-        PsiClass containingClass = rootMethod.getContainingClass();
-        buildTreeForCallHierarchy(rootMethod, rootNode, containingClass);
-        return new CallGraph(rootNode);
+    static CallGraph generateCallGraph(PsiMethod rootPsiMethod) {
+        createdMethods.clear();
+        CallGraphNode rootNode = createNodeFromPsiMethod(rootPsiMethod);
+        PsiClass containingClass = rootPsiMethod.getContainingClass();
+        buildTreeForCallHierarchy(rootPsiMethod, rootNode, containingClass);
+        return new CallGraph(rootNode, createdMethods);
     }
 
-    private static CallGraphNode createNodeFromMethod(PsiMethod method) {
-        return new CallGraphNode(method.getName());
+    private static CallGraphNode createNodeFromPsiMethod(PsiMethod psiMethod) {
+        Method method = getMethodFromName(psiMethod.getName());
+        return new CallGraphNode(method);
     }
 
-    private static void buildTreeForCallHierarchy(PsiMethod rootMethod, CallGraphNode rootNode, PsiClass classToBuildTreeFor) {
-        Collection<PsiMethodCallExpression> children = PsiTreeUtil.findChildrenOfAnyType(rootMethod, true, PsiMethodCallExpression.class);
+    private static Method getMethodFromName(String methodName) {
+        for (Method existingMethod : createdMethods) {
+            if (methodName.equals(existingMethod.getName())) {
+                return existingMethod;
+            }
+        }
+        return createMethod(methodName);
+    }
+
+    @NotNull
+    private static Method createMethod(String methodName) {
+        Method newMethod = new Method(methodName);
+        createdMethods.add(newMethod);
+        return newMethod;
+    }
+
+    private static void buildTreeForCallHierarchy(PsiMethod rootPsiMethod, CallGraphNode rootNode, PsiClass classToBuildTreeFor) {
+        Collection<PsiMethodCallExpression> children = PsiTreeUtil.findChildrenOfAnyType(rootPsiMethod, true, PsiMethodCallExpression.class);
         for (PsiMethodCallExpression childMethodCall : children) {
             processChildMethodCall(childMethodCall, rootNode, classToBuildTreeFor);
         }
     }
 
     private static void processChildMethodCall(PsiMethodCallExpression childMethodCall, CallGraphNode parentNode, PsiClass classToBuildTreeFor) {
-        PsiMethod childMethod = childMethodCall.resolveMethod();
-        if (childMethod != null && childMethod.getContainingClass() == classToBuildTreeFor) {
-            CallGraphNode childNode = createNodeFromMethod(childMethod);
+        PsiMethod childPsiMethod = childMethodCall.resolveMethod();
+        if (childPsiMethod != null && childPsiMethod.getContainingClass() == classToBuildTreeFor) {
+            CallGraphNode childNode = createNodeFromPsiMethod(childPsiMethod);
             parentNode.addChild(childNode);
-            buildTreeForCallHierarchy(childMethod, childNode, classToBuildTreeFor);
+            buildTreeForCallHierarchy(childPsiMethod, childNode, classToBuildTreeFor);
         }
-    }
-
-    static CallGraph generateMockCallGraph() {
-        CallGraphNode rootNode = new CallGraphNode("rootMethod");
-
-        rootNode.addChild(new CallGraphNode("firstChild"));
-        rootNode.addChild(new CallGraphNode("secondChild"));
-
-        CallGraphNode childWithChildren = new CallGraphNode("thirdChildWithChildren");
-        childWithChildren.addChild(new CallGraphNode("firstNestedChild"));
-        childWithChildren.addChild(new CallGraphNode("secondNestedChild"));
-        rootNode.addChild(childWithChildren);
-
-        return new CallGraph(rootNode);
     }
 
 }

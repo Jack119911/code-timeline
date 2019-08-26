@@ -2,13 +2,16 @@ import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 class CallGraph {
 
     private final CallGraphNode rootNode;
+    private final ArrayList<Method> processedMethods;
 
-    CallGraph(CallGraphNode rootNode) {
+    CallGraph(CallGraphNode rootNode, ArrayList<Method> processedMethods) {
         this.rootNode = rootNode;
+        this.processedMethods = processedMethods;
     }
 
     void initVisualization(JBPanel panel) {

@@ -3,15 +3,15 @@ import java.util.ArrayList;
 class CallGraphNode {
 
     private final ArrayList<CallGraphNode> children = new ArrayList<>();
-    private final String methodName;
+    private final Method method;
     private final NodeVisualization visualization;
     private int necessarySpace;
     private int paddingUnitsLeft;
     private int paddingUnitsRight;
 
-    CallGraphNode(String methodName) {
-        this.methodName = methodName;
-        this.visualization = new DefaultNodeVisualization(methodName);
+    CallGraphNode(Method method) {
+        this.method = method;
+        this.visualization = new DefaultNodeVisualization(method);
     }
 
     ArrayList<CallGraphNode> getChildren() {
@@ -98,7 +98,7 @@ class CallGraphNode {
         for (int i = 0; i < depth; i++) {
             builder.append("\t");
         }
-        builder.append(methodName).append(" (").append(necessarySpace).append(")").append("\n");
+        builder.append(method.getName()).append(" (").append(necessarySpace).append(")").append("\n");
     }
 
     private void addChildrenToStringBuilder(int depth, StringBuilder builder) {
@@ -109,6 +109,6 @@ class CallGraphNode {
 
     @Override
     public String toString() {
-        return methodName;
+        return method.getName();
     }
 }

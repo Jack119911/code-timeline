@@ -8,8 +8,8 @@ public class DefaultNodeVisualization extends NodeVisualization {
     private JBPanel panel;
     private static final int HEIGHT = 40;
 
-    DefaultNodeVisualization(String methodName) {
-        super(methodName);
+    DefaultNodeVisualization(Method method) {
+        super(method);
     }
 
     @Override
@@ -18,7 +18,7 @@ public class DefaultNodeVisualization extends NodeVisualization {
         panel.withBackground(color);
         panel.withPreferredHeight(HEIGHT);
 
-        JBLabel label = new JBLabel(methodName + "()");
+        JBLabel label = new JBLabel(method.getName() + "()");
         label.setFont(new Font("Serif", Font.PLAIN, 20));
         panel.add(label);
     }

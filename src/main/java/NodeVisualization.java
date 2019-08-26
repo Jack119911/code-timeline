@@ -5,21 +5,21 @@ import java.util.NoSuchElementException;
 
 abstract class NodeVisualization {
 
-    final String methodName;
+    final Method method;
     final JBColor color;
 
-    NodeVisualization(String methodName) {
-        this.methodName = methodName;
+    NodeVisualization(Method method) {
+        this.method = method;
         this.color = determineColor();
         createComponent();
     }
 
     private JBColor determineColor() {
         try {
-            return ColorService.getDistinctColorForMethodName(methodName);
+            return ColorService.getDistinctColorForMethodName(method.getName());
         } catch (NoSuchElementException e) {
             e.printStackTrace();
-            return ColorService.getRandomColorForMethodName(methodName);
+            return ColorService.getRandomColorForMethodName(method.getName());
         }
     }
 

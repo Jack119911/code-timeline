@@ -17,11 +17,11 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Timeline" anchor="bottom" factoryClass="TimelineToolWindowFactory"/>
+        <toolWindow id="Timeline" anchor="bottom" factoryClass="TimelineToolWindowFactory" icon="/icons/timeline.png"/>
     </extensions>
 
     <actions>
-        <action id="RootMethodSelection" class="SelectMethodAction" text="Select for Timeline" description="Select this Method as Root for the Timeline">
+        <action id="RootMethodSelection" class="SelectMethodAction" text="Select for Timeline" description="Select this Method as Root for the Timeline" icon="/icons/timeline.png">
             <add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>
         </action>
     </actions>

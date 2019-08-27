@@ -42,7 +42,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     }
 
     @Override
-    public void highlightUpdated(boolean isHighlighted) {
+    public void isHighlightedUpdated(boolean isHighlighted) {
         if (isHighlighted) {
             panel.withBackground(color.brighter());
         } else {

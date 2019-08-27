@@ -14,7 +14,7 @@ public class IsHighlightedObservable {
     void set(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
         for (IsHighlightedListener listener : listeners) {
-            listener.highlightUpdated(isHighlighted);
+            listener.isHighlightedUpdated(isHighlighted);
         }
     }
 

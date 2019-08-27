@@ -22,22 +22,22 @@ public class CallGraphGenerator {
     }
 
     private static CallGraphNode createNodeFromPsiMethod(PsiMethod psiMethod) {
-        Method method = getMethodFromName(psiMethod.getName());
+        Method method = getMethodFromPsiMethod(psiMethod);
         return new CallGraphNode(method);
     }
 
-    private static Method getMethodFromName(String methodName) {
+    private static Method getMethodFromPsiMethod(PsiMethod psiMethod) {
         for (Method existingMethod : createdMethods) {
-            if (methodName.equals(existingMethod.getName())) {
+            if (psiMethod.getName().equals(existingMethod.getName())) {
                 return existingMethod;
             }
         }
-        return createMethod(methodName);
+        return createMethod(psiMethod);
     }
 
     @NotNull
-    private static Method createMethod(String methodName) {
-        Method newMethod = new Method(methodName);
+    private static Method createMethod(PsiMethod psiMethod) {
+        Method newMethod = new Method(psiMethod);
         createdMethods.add(newMethod);
         return newMethod;
     }

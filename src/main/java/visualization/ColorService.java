@@ -17,7 +17,7 @@ public class ColorService {
 
     private ColorService(){}
 
-    static JBColor getDistinctColorForMethodName(String methodName) throws NoSuchElementException {
+    static JBColor getDistinctColorForMethodName(String methodName) {
         if (distinctColorMapping.containsKey(methodName)) {
             return distinctColorMapping.get(methodName);
         } else {

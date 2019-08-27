@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SelectMethodAction extends AnAction {
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
         final PsiMethod psiElement = (PsiMethod) e.getData(CommonDataKeys.PSI_ELEMENT);

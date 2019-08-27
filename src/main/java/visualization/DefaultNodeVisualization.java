@@ -57,7 +57,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
 
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        // Do nothing
+        method.jumpToDeclaration();
     }
 
     @Override

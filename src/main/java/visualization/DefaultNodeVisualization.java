@@ -13,8 +13,8 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     private JBPanel panel;
     private static final int HEIGHT = 40;
 
-    public DefaultNodeVisualization(Method method) {
-        super(method);
+    public DefaultNodeVisualization(Method method, boolean callIsOptional, boolean calledMultipleTimes) {
+        super(method, callIsOptional, calledMultipleTimes);
     }
 
     @Override

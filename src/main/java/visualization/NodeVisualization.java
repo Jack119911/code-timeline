@@ -9,10 +9,14 @@ import java.util.NoSuchElementException;
 public abstract class NodeVisualization {
 
     final Method method;
+    final boolean callIsOptional;
+    final boolean calledMultipleTimes;
     final JBColor color;
 
-    NodeVisualization(Method method) {
+    NodeVisualization(Method method, boolean callIsOptional, boolean calledMultipleTimes ) {
         this.method = method;
+        this.callIsOptional = callIsOptional;
+        this.calledMultipleTimes = calledMultipleTimes;
         this.color = determineColor();
         createComponent();
     }

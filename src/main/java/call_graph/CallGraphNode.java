@@ -9,14 +9,18 @@ class CallGraphNode {
 
     private final ArrayList<CallGraphNode> children = new ArrayList<>();
     private final Method method;
+    private final boolean callIsOptional;
+    private final boolean calledMultipleTimes;
     private final NodeVisualization visualization;
     private int necessarySpace;
     private int paddingUnitsLeft;
     private int paddingUnitsRight;
 
-    CallGraphNode(Method method) {
+    CallGraphNode(Method method, boolean callIsOptional, boolean calledMultipleTimes) {
         this.method = method;
-        this.visualization = new DefaultNodeVisualization(method);
+        this.callIsOptional = callIsOptional;
+        this.calledMultipleTimes = calledMultipleTimes;
+        this.visualization = new DefaultNodeVisualization(method, callIsOptional, calledMultipleTimes);
     }
 
     ArrayList<CallGraphNode> getChildren() {

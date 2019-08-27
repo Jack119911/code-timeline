@@ -1,3 +1,5 @@
+import call_graph.CallGraph;
+import call_graph.CallGraphGenerator;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -9,13 +11,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.psi.*;
-import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import visualization.ColorService;
 
 import javax.swing.*;
 import java.awt.*;

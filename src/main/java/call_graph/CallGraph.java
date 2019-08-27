@@ -1,10 +1,12 @@
+package call_graph;
+
 import com.intellij.ui.components.JBPanel;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-class CallGraph {
+public class CallGraph {
 
     private final CallGraphNode rootNode;
     private final ArrayList<Method> processedMethods;
@@ -14,7 +16,7 @@ class CallGraph {
         this.processedMethods = processedMethods;
     }
 
-    void initVisualization(JBPanel panel) {
+    public void initVisualization(JBPanel panel) {
         rootNode.updateNecessarySpaceInSubTree();
         rootNode.updatePaddingUnitsInSubTree(0, 0);
         initAllNodeVisualizations(panel, rootNode, 0, 0);

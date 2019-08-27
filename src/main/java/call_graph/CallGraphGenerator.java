@@ -1,3 +1,5 @@
+package call_graph;
+
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -5,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
-class CallGraphGenerator {
+public class CallGraphGenerator {
 
     private static ArrayList<Method> createdMethods = new ArrayList<>();
 
     private CallGraphGenerator() {}
 
-    static CallGraph generateCallGraph(PsiMethod rootPsiMethod) {
+    public static CallGraph generateCallGraph(PsiMethod rootPsiMethod) {
         createdMethods.clear();
         CallGraphNode rootNode = createNodeFromPsiMethod(rootPsiMethod);
         PsiClass containingClass = rootPsiMethod.getContainingClass();

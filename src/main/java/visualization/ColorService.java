@@ -1,3 +1,5 @@
+package visualization;
+
 import com.intellij.ui.JBColor;
 import kotlin.random.Random;
 
@@ -5,7 +7,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
-class ColorService {
+public class ColorService {
 
     private static final float SATURATION = (float) 0.5;
     private static final float BRIGHTNESS = (float) 0.8;
@@ -31,7 +33,7 @@ class ColorService {
         distinctColorMapping.put(methodName, distinctColor);
     }
 
-    static void initColors(String[] methodNames) {
+    public static void initColors(String[] methodNames) {
         distinctColorMapping.clear();
         randomColorMapping.clear();
         for (String methodName : methodNames) {

@@ -1,3 +1,7 @@
+package call_graph;
+
+import visualization.IsHighlightedObservable;
+
 public class Method {
 
     private final String name;
@@ -7,11 +11,11 @@ public class Method {
         this.name = name;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    IsHighlightedObservable getIsHighlighted() {
+    public IsHighlightedObservable getIsHighlighted() {
         return isHighlighted;
     }
 

@@ -1,9 +1,12 @@
+package visualization;
+
+import call_graph.Method;
 import com.intellij.ui.JBColor;
 
 import java.awt.*;
 import java.util.NoSuchElementException;
 
-abstract class NodeVisualization {
+public abstract class NodeVisualization {
 
     final Method method;
     final JBColor color;
@@ -25,5 +28,5 @@ abstract class NodeVisualization {
 
     protected abstract void createComponent();
 
-    abstract Component getComponent();
+    public abstract Component getComponent();
 }

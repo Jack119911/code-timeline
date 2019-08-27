@@ -1,3 +1,6 @@
+package visualization;
+
+import call_graph.Method;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 
@@ -10,7 +13,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     private JBPanel panel;
     private static final int HEIGHT = 40;
 
-    DefaultNodeVisualization(Method method) {
+    public DefaultNodeVisualization(Method method) {
         super(method);
     }
 
@@ -48,7 +51,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     }
 
     @Override
-    Component getComponent() {
+    public Component getComponent() {
         return panel;
     }
 

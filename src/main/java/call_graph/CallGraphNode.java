@@ -1,3 +1,8 @@
+package call_graph;
+
+import visualization.DefaultNodeVisualization;
+import visualization.NodeVisualization;
+
 import java.util.ArrayList;
 
 class CallGraphNode {

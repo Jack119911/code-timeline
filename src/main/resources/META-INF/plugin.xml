@@ -21,7 +21,7 @@
     </extensions>
 
     <actions>
-        <action id="RootMethodSelection" class="SelectMethodAction" text="Select for Timeline" description="Select this Method as Root for the Timeline" icon="/icons/timeline.png">
+        <action id="RootMethodSelection" class="SelectMethodAction" text="Select for Timeline" description="Select this call_graph.Method as Root for the Timeline" icon="/icons/timeline.png">
             <add-to-group group-id="EditorPopupMenu" anchor="first"></add-to-group>
         </action>
     </actions>

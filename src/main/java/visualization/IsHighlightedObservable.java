@@ -1,11 +1,13 @@
+package visualization;
+
 import java.util.ArrayList;
 
-class IsHighlightedObservable {
+public class IsHighlightedObservable {
 
     private boolean isHighlighted;
     private ArrayList<IsHighlightedListener> listeners = new ArrayList<>();
 
-    IsHighlightedObservable(boolean isHighlighted) {
+    public IsHighlightedObservable(boolean isHighlighted) {
         this.isHighlighted = isHighlighted;
     }
 

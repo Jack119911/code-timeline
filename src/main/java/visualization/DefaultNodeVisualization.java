@@ -4,21 +4,22 @@ import call_graph.Method;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import icons.Icons;
+import visualization.interaction.MethodContentPopupController;
+import visualization.interaction.MethodIsHighlightedController;
+import visualization.interaction.MethodNavigationController;
 
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-public class DefaultNodeVisualization extends NodeVisualization implements IsHighlightedListener, MouseListener {
+public class DefaultNodeVisualization extends NodeVisualization implements IsHighlightedListener {
 
+    private static final int HEIGHT = 40;
     private static final String FONT_STYLE = "Serif";
     private static final int FONT_SIZE = 20;
     private static final String CONDITION_TOOL_TIP_TEXT = "A condition controls whether the method is called or not";
     private static final String LOOP_TOOL_TIP_TEXT = "The method may be called multiple times, because it is surrounded by a loop";
     private JBPanel panel;
-    private static final int HEIGHT = 40;
 
     public DefaultNodeVisualization(Method method, boolean callIsOptional, boolean calledMultipleTimes) {
         super(method, callIsOptional, calledMultipleTimes);
@@ -27,7 +28,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     @Override
     protected void createComponent() {
         createPanel();
-        createLabel();
+        createMethodNameLabel();
         createIcons();
         initListeners();
     }
@@ -36,14 +37,16 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
         panel = new JBPanel(new BorderLayout());
         panel.withBackground(color);
         panel.withPreferredHeight(HEIGHT);
+        addInteraction(panel, true, true, false);
     }
 
-    private void createLabel() {
+    private void createMethodNameLabel() {
         JBPanel wrapper = new JBPanel().andTransparent();
 
-        JBLabel label = new JBLabel(method.getName() + "()");
-        label.setFont(new Font(FONT_STYLE, Font.PLAIN, FONT_SIZE));
-        wrapper.add(label);
+        JBLabel methodNameLabel = new JBLabel(method.getName() + "()");
+        methodNameLabel.setFont(new Font(FONT_STYLE, Font.PLAIN, FONT_SIZE));
+        addInteraction(methodNameLabel, true, true, true);
+        wrapper.add(methodNameLabel);
 
         panel.add(wrapper, BorderLayout.CENTER);
     }
@@ -66,13 +69,19 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     private void addIcon(Icon icon, JBPanel panelForIcon, JPanel panelForSpace, String toolTipText) {
         JBLabel iconLabel = new JBLabel(icon);
         iconLabel.setToolTipText(toolTipText);
+        addInteraction(iconLabel, true, false, false);
         panelForIcon.add(iconLabel);
         panelForSpace.add(Box.createRigidArea(new Dimension(icon.getIconWidth(), 1)));
     }
 
     private void initListeners() {
         method.getIsHighlighted().addListener(this);
-        panel.addMouseListener(this);
+    }
+
+    private void addInteraction(Component component, boolean highlightMethodBlock, boolean navigateImplementation, boolean showContentPopup) {
+        if (highlightMethodBlock) { component.addMouseListener(new MethodIsHighlightedController(method)); }
+        if (navigateImplementation) { component.addMouseListener(new MethodNavigationController(method)); }
+        if (showContentPopup) { component.addMouseListener(new MethodContentPopupController(component)); }
     }
 
     @Override
@@ -89,28 +98,4 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
         return panel;
     }
 
-    @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
-        method.jumpToDeclaration();
-    }
-
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {
-        // Do nothing
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
-        // Do nothing
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {
-        method.getIsHighlighted().set(true);
-    }
-
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {
-        method.getIsHighlighted().set(false);
-    }
 }

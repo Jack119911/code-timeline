@@ -3,13 +3,20 @@ package visualization;
 import call_graph.Method;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
+import icons.Icons;
 
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class DefaultNodeVisualization extends NodeVisualization implements IsHighlightedListener, MouseListener {
 
+    private static final String FONT_STYLE = "Serif";
+    private static final int FONT_SIZE = 20;
+    private static final String CONDITION_TOOL_TIP_TEXT = "A condition controls whether the method is called or not";
+    private static final String LOOP_TOOL_TIP_TEXT = "The method may be called multiple times, because it is surrounded by a loop";
     private JBPanel panel;
     private static final int HEIGHT = 40;
 
@@ -21,19 +28,46 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     protected void createComponent() {
         createPanel();
         createLabel();
+        createIcons();
         initListeners();
     }
 
-    private void createLabel() {
-        JBLabel label = new JBLabel(method.getName() + "()");
-        label.setFont(new Font("Serif", Font.PLAIN, 20));
-        panel.add(label);
-    }
-
     private void createPanel() {
-        panel = new JBPanel();
+        panel = new JBPanel(new BorderLayout());
         panel.withBackground(color);
         panel.withPreferredHeight(HEIGHT);
+    }
+
+    private void createLabel() {
+        JBPanel wrapper = new JBPanel().andTransparent();
+
+        JBLabel label = new JBLabel(method.getName() + "()");
+        label.setFont(new Font(FONT_STYLE, Font.PLAIN, FONT_SIZE));
+        wrapper.add(label);
+
+        panel.add(wrapper, BorderLayout.CENTER);
+    }
+
+    private void createIcons() {
+        JBPanel wrapper = new JBPanel().andTransparent();
+        JBPanel spaceRight = new JBPanel().andTransparent();
+
+        if (callIsOptional) {
+            addIcon(Icons.CONDITION_ICON, wrapper, spaceRight, CONDITION_TOOL_TIP_TEXT);
+        }
+        if (calledMultipleTimes) {
+            addIcon(Icons.LOOP_ICON, wrapper, spaceRight, LOOP_TOOL_TIP_TEXT);
+        }
+
+        panel.add(wrapper, BorderLayout.LINE_START);
+        panel.add(spaceRight, BorderLayout.LINE_END);
+    }
+
+    private void addIcon(Icon icon, JBPanel panelForIcon, JPanel panelForSpace, String toolTipText) {
+        JBLabel iconLabel = new JBLabel(icon);
+        iconLabel.setToolTipText(toolTipText);
+        panelForIcon.add(iconLabel);
+        panelForSpace.add(Box.createRigidArea(new Dimension(icon.getIconWidth(), 1)));
     }
 
     private void initListeners() {

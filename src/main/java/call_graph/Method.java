@@ -24,4 +24,8 @@ public class Method {
         psiMethod.navigate(true);
     }
 
+    public PsiMethod getPsiMethod() {
+        return psiMethod;
+    }
+
 }

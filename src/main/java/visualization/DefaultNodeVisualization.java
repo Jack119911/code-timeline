@@ -78,10 +78,10 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
         method.getIsHighlighted().addListener(this);
     }
 
-    private void addInteraction(Component component, boolean highlightMethodBlock, boolean navigateImplementation, boolean showContentPopup) {
+    private void addInteraction(JComponent component, boolean highlightMethodBlock, boolean navigateImplementation, boolean showContentPopup) {
         if (highlightMethodBlock) { component.addMouseListener(new MethodIsHighlightedController(method)); }
         if (navigateImplementation) { component.addMouseListener(new MethodNavigationController(method)); }
-        if (showContentPopup) { component.addMouseListener(new MethodContentPopupController(component)); }
+        if (showContentPopup) { component.addMouseListener(new MethodContentPopupController(component, method)); }
     }
 
     @Override

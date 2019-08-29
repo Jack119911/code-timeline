@@ -3,7 +3,7 @@ package visualization;
 import call_graph.Method;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
-import icons.Icons;
+import resources.Icons;
 import visualization.interaction.MethodContentPopupController;
 import visualization.interaction.MethodIsHighlightedController;
 import visualization.interaction.MethodNavigationController;

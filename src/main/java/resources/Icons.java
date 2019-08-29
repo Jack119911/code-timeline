@@ -1,4 +1,4 @@
-package icons;
+package resources;
 
 import com.intellij.openapi.util.IconLoader;
 

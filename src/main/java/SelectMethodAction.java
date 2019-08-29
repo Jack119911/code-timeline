@@ -17,6 +17,7 @@ public class SelectMethodAction extends AnAction {
         ToolWindow timeline = ToolWindowManager.getInstance(e.getProject()).getToolWindow("Timeline");
         TimelineToolWindowFactory factory = new TimelineToolWindowFactory();
         factory.visualizeCallHierarchy(timeline, psiElement);
+        factory.selectVisualizationTab(timeline);
     }
 
     @Override

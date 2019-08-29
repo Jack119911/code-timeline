@@ -11,6 +11,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.psi.*;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
@@ -26,19 +27,32 @@ import java.util.Objects;
 
 public class TimelineToolWindowFactory implements ToolWindowFactory {
 
-    private static final String MARKER_FOR_ROOT_METHOD = "VisualizationRoot";
-
     private static class NoMethodToVisualizeException extends Exception {
         NoMethodToVisualizeException(String message) {
             super(message);
         }
     }
 
+    private static final int MARGIN_LEFT = 10;
+    private static final int MARGIN_TOP = 10;
+    private static final String MARKER_FOR_ROOT_METHOD = "VisualizationRoot";
     private static final String VISUALIZATION_DISPLAY_NAME = "Visualization";
+    private static final String TUTORIAL_DISPLAY_NAME = "Tutorial";
     private JBPanel visualizationRootView;
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+        createVisualizationTab(project, toolWindow);
+        createTutorialTab(project, toolWindow);
+    }
+
+    private void createTutorialTab(Project project, ToolWindow toolWindow) {
+        ContentManager contentManager = toolWindow.getContentManager();
+        Content visualizationContent = contentManager.getFactory().createContent(Tutorial.getTutorialComponent(), TUTORIAL_DISPLAY_NAME, false);
+        contentManager.addContent(visualizationContent);
+    }
+
+    private void createVisualizationTab(Project project, ToolWindow toolWindow) {
         DumbService.getInstance(project).runWhenSmart(() -> visualizeMostImportantMethod(project, toolWindow));
     }
 
@@ -135,10 +149,9 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
         return null;
     }
 
-
     private void initContent(ToolWindow toolWindow) {
         visualizationRootView = new JBPanel(new GridBagLayout());
-        JBPanel wrapper = new JBPanel(new FlowLayout(FlowLayout.LEADING, 10, 10));
+        JBPanel wrapper = new JBPanel(new FlowLayout(FlowLayout.LEADING, MARGIN_LEFT, MARGIN_TOP));
         wrapper.add(visualizationRootView);
         JBScrollPane scrollPane = new JBScrollPane(wrapper);
         replaceVisualizationContent(scrollPane, toolWindow.getContentManager());
@@ -161,6 +174,14 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
                 (ThrowableComputable<CallGraph, ProcessCanceledException>) () -> CallGraphGenerator.generateCallGraph((rootMethod))
         );
         callGraph.initVisualization(visualizationRootView);
+    }
+
+    void selectVisualizationTab(ToolWindow toolWindow) {
+        ContentManager contentManager = toolWindow.getContentManager();
+        Content visualizationContent = contentManager.findContent(VISUALIZATION_DISPLAY_NAME);
+        if (visualizationContent != null) {
+            contentManager.setSelectedContent(visualizationContent);
+        }
     }
 
     private String[] getAllMethodNamesOfClass(PsiClass containingClass) {

@@ -11,8 +11,10 @@ import com.intellij.psi.JavaCodeFragmentFactory;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiMethod;
 import com.intellij.ui.EditorTextField;
+import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -31,7 +33,7 @@ public class MethodContentPopupController implements MouseListener {
         PsiMethod psiMethod = methodToShow.getPsiMethod();
         Project project = psiMethod.getProject();
         JavaCodeFragmentFactory fragmentFactory = JavaCodeFragmentFactory.getInstance(project);
-        JavaCodeFragment codeFragment = fragmentFactory.createMemberCodeFragment(psiMethod.getText(), psiMethod.getContext(), psiMethod.isPhysical());
+        JavaCodeFragment codeFragment = fragmentFactory.createMemberCodeFragment("  " + psiMethod.getText(), psiMethod.getContext(), psiMethod.isPhysical());
         Document document = PsiDocumentManager.getInstance(project).getDocument(codeFragment);
         return new EditorTextField(document, project, psiMethod.getContainingFile().getFileType(), true, false);
     }

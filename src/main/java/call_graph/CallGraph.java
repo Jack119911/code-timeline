@@ -8,6 +8,9 @@ import java.util.ArrayList;
 
 public class CallGraph {
 
+    private static final int PADDING_STEP = 10;
+    private static final int GAP_BETWEEN_LINES = 1;
+    private static final boolean USE_PYRAMID_LAYOUT = false;
     private final CallGraphNode rootNode;
     private final ArrayList<Method> processedMethods;
 
@@ -40,16 +43,23 @@ public class CallGraph {
         constraints.gridx = xPosition;
         constraints.gridwidth = node.getNecessarySpace();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        // constraints.weightx = 0.5;
-        addPaddingToConstraints(constraints, node);
+        if (USE_PYRAMID_LAYOUT) {
+            addPyramidPaddingToConstraints(constraints, node);
+        } else {
+            addUniformPaddingToConstraints(constraints, node);
+        }
         return constraints;
     }
 
-    private void addPaddingToConstraints(GridBagConstraints constraints, CallGraphNode node) {
-        constraints.insets.top = 1;
-        final int paddingStep = 4;
-        constraints.insets.left = node.getPaddingUnitsLeft() * paddingStep;
-        constraints.insets.right = node.getPaddingUnitsRight() * paddingStep;
+    private void addUniformPaddingToConstraints(GridBagConstraints constraints, CallGraphNode node) {
+        constraints.insets.top = GAP_BETWEEN_LINES;
+        constraints.insets.left = GAP_BETWEEN_LINES;
+    }
+
+    private void addPyramidPaddingToConstraints(GridBagConstraints constraints, CallGraphNode node) {
+        constraints.insets.top = GAP_BETWEEN_LINES;
+        constraints.insets.left = node.getPaddingUnitsLeft() * PADDING_STEP;
+        constraints.insets.right = node.getPaddingUnitsRight() * PADDING_STEP;
     }
 
     private void initVisualizationOfChildren(JBPanel panel, CallGraphNode currentNode, int currentDepthLevel, int xPosition) {

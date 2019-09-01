@@ -12,6 +12,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
@@ -45,7 +46,7 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         setFont(project);
         createVisualizationTab(project, toolWindow);
-        createTutorialTab(project, toolWindow);
+        createTutorialTab(toolWindow);
     }
 
     private void setFont(Project project) {
@@ -57,7 +58,7 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
         }
     }
 
-    private void createTutorialTab(Project project, ToolWindow toolWindow) {
+    private void createTutorialTab(ToolWindow toolWindow) {
         ContentManager contentManager = toolWindow.getContentManager();
         Content visualizationContent = contentManager.getFactory().createContent(Tutorial.getTutorialComponent(), TUTORIAL_DISPLAY_NAME, false);
         contentManager.addContent(visualizationContent);
@@ -152,12 +153,21 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
         for (PsiMethod method : allPossibleMethods) {
             PsiCodeBlock codeBlock = method.getBody();
             if (codeBlock == null) continue;
-            PsiElement possibleComment = codeBlock.getFirstBodyElement();
-            if (possibleComment instanceof PsiComment && possibleComment.getText().contains(MARKER_FOR_ROOT_METHOD)) {
+            if (checkCodeBlockForMarker(codeBlock)) {
                 return method;
             }
         }
         return null;
+    }
+
+    private boolean checkCodeBlockForMarker(PsiCodeBlock codeBlock) {
+        ArrayList<PsiComment> comments = new ArrayList<>(PsiTreeUtil.findChildrenOfAnyType(codeBlock, false, PsiComment.class));
+        for (PsiComment comment : comments) {
+            if (comment.getText().contains(MARKER_FOR_ROOT_METHOD)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void initContent(ToolWindow toolWindow) {

@@ -66,7 +66,7 @@ class Tutorial {
         return constraints;
     }
 
-    private static JComponent createPic(Image image) {
+    private static JComponent createPic(@SuppressWarnings("SameParameterValue") Image image) {
         JBLabel label = new JBLabel(new JBImageIcon(image));
         label.setBorder(BorderFactory.createEtchedBorder());
         return label;

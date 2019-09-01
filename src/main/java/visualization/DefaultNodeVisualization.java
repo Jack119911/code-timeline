@@ -80,7 +80,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     @SuppressWarnings("SameParameterValue")
     private void addInteraction(JComponent component, boolean highlightMethodBlock, boolean navigateImplementation, boolean showContentPopup) {
         if (highlightMethodBlock) { component.addMouseListener(new MethodIsHighlightedController(method)); }
-        if (navigateImplementation) { component.addMouseListener(new MethodNavigationController(method)); }
+        if (navigateImplementation) { component.addMouseListener(new MethodNavigationController(method, panel)); }
         if (showContentPopup) { component.addMouseListener(new MethodContentPopupController(component, method)); }
     }
 

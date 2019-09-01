@@ -2,6 +2,7 @@ import call_graph.CallGraph;
 import call_graph.CallGraphGenerator;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
@@ -11,7 +12,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.psi.*;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
@@ -19,6 +19,7 @@ import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import visualization.ColorService;
+import visualization.StyleSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,8 +43,18 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+        setFont(project);
         createVisualizationTab(project, toolWindow);
         createTutorialTab(project, toolWindow);
+    }
+
+    private void setFont(Project project) {
+        try {
+            TextEditor textEditor= (TextEditor) FileEditorManager.getInstance(project).getSelectedEditor();
+            StyleSettings.getInstance().setMonoSpaceFontName(textEditor.getComponent().getFont().getFontName());
+        } catch (NullPointerException e) {
+            System.out.println("Could not get font from selected Editor");
+        }
     }
 
     private void createTutorialTab(Project project, ToolWindow toolWindow) {

@@ -15,7 +15,6 @@ import java.awt.*;
 public class DefaultNodeVisualization extends NodeVisualization implements IsHighlightedListener {
 
     private static final int HEIGHT = 40;
-    private static final String FONT_STYLE = "Serif";
     private static final int FONT_SIZE = 20;
     private static final String CONDITION_TOOL_TIP_TEXT = "A condition controls whether the method is called or not";
     private static final String LOOP_TOOL_TIP_TEXT = "The method may be called multiple times, because it is surrounded by a loop";
@@ -44,7 +43,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
         JBPanel wrapper = new JBPanel().andTransparent();
 
         JBLabel methodNameLabel = new JBLabel(method.getName() + "()");
-        methodNameLabel.setFont(new Font(FONT_STYLE, Font.PLAIN, FONT_SIZE));
+        methodNameLabel.setFont(new Font(StyleSettings.getInstance().getMonoSpaceFontName(), Font.PLAIN, FONT_SIZE));
         addInteraction(methodNameLabel, true, true, true);
         wrapper.add(methodNameLabel);
 

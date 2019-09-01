@@ -6,13 +6,13 @@ import com.intellij.util.ui.JBImageIcon;
 import org.jetbrains.annotations.NotNull;
 import resources.Images;
 import resources.TutorialText;
+import visualization.StyleSettings;
 
 import javax.swing.*;
 import java.awt.*;
 
 class Tutorial {
 
-    private static final String FONT_STYLE = "Serif";
     private static final int FONT_SIZE = 15;
     private static final int MARGIN_LEFT = 5;
     private static final int MARGIN_TOP = 5;
@@ -51,7 +51,7 @@ class Tutorial {
         textArea.setWrapStyleWord(true);
         textArea.setOpaque(false);
         textArea.setBorder(BorderFactory.createEmptyBorder());
-        textArea.setFont(new Font(FONT_STYLE, Font.PLAIN, FONT_SIZE));
+        textArea.setFont(new Font(StyleSettings.getInstance().getMonoSpaceFontName(), Font.PLAIN, FONT_SIZE));
         return textArea;
     }
 

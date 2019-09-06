@@ -20,7 +20,6 @@ import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import visualization.ColorService;
-import visualization.StyleSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,18 +43,8 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        setFont(project);
         createVisualizationTab(project, toolWindow);
         createTutorialTab(toolWindow);
-    }
-
-    private void setFont(Project project) {
-        try {
-            TextEditor textEditor= (TextEditor) FileEditorManager.getInstance(project).getSelectedEditor();
-            StyleSettings.getInstance().setMonoSpaceFontName(textEditor.getComponent().getFont().getFontName());
-        } catch (NullPointerException e) {
-            System.out.println("Could not get font from selected Editor");
-        }
     }
 
     private void createTutorialTab(ToolWindow toolWindow) {

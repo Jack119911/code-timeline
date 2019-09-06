@@ -1,3 +1,4 @@
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
@@ -6,7 +7,6 @@ import com.intellij.util.ui.JBImageIcon;
 import org.jetbrains.annotations.NotNull;
 import resources.Images;
 import resources.TutorialText;
-import visualization.StyleSettings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +51,7 @@ class Tutorial {
         textArea.setWrapStyleWord(true);
         textArea.setOpaque(false);
         textArea.setBorder(BorderFactory.createEmptyBorder());
-        textArea.setFont(new Font(StyleSettings.getInstance().getMonoSpaceFontName(), Font.PLAIN, FONT_SIZE));
+        textArea.setFont(new Font(EditorUtil.getEditorFont().getName(), Font.PLAIN, FONT_SIZE));
         return textArea;
     }
 

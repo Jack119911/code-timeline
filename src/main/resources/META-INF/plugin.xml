@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>de.ur.mi.code-timeline</id>
     <name>Code Timeline</name>
-    <vendor email="" url=""></vendor>
+    <vendor email="jakob.schoenicke@mailbox.org" url="https://github.com/Jack119911"></vendor>
 
     <description><![CDATA[
     A visualization for code showing how methods are interacting with each other.

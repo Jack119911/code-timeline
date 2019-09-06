@@ -44,7 +44,7 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         createVisualizationTab(project, toolWindow);
-        createTutorialTab(toolWindow);
+        // createTutorialTab(toolWindow);
     }
 
     private void createTutorialTab(ToolWindow toolWindow) {

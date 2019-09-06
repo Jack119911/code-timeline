@@ -46,7 +46,9 @@ public class CallGraphGenerator {
     private static void buildTreeForCallHierarchy(PsiMethod rootPsiMethod, CallGraphNode rootNode, PsiClass classToBuildTreeFor) {
         Collection<PsiMethodCallExpression> children = PsiTreeUtil.findChildrenOfAnyType(rootPsiMethod, true, PsiMethodCallExpression.class);
         for (PsiMethodCallExpression childMethodCall : children) {
-            processChildMethodCall(childMethodCall, rootNode, classToBuildTreeFor);
+            if (childMethodCall.resolveMethod() != rootPsiMethod) {
+                processChildMethodCall(childMethodCall, rootNode, classToBuildTreeFor);
+            }
         }
     }
 

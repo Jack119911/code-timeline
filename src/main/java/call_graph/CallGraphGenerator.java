@@ -11,12 +11,15 @@ import java.util.Collection;
 public class CallGraphGenerator {
 
     private static ArrayList<Method> createdMethods = new ArrayList<>();
+    private static ArrayList<PsiMethod> currentPath = new ArrayList<>();
 
     private CallGraphGenerator() {}
 
     public static CallGraph generateCallGraph(PsiMethod rootPsiMethod) {
         createdMethods.clear();
+        currentPath.clear();
         CallGraphNode rootNode = createNodeFromPsiMethod(rootPsiMethod, new PsiMethodCallExpressionImpl());
+        currentPath.add(rootPsiMethod);
         PsiClass containingClass = rootPsiMethod.getContainingClass();
         buildTreeForCallHierarchy(rootPsiMethod, rootNode, containingClass);
         return new CallGraph(rootNode, createdMethods);
@@ -53,23 +56,34 @@ public class CallGraphGenerator {
     private static void processChildMethodCall(PsiMethodCallExpression childMethodCall, CallGraphNode parentNode, PsiClass classToBuildTreeFor) {
         PsiMethod childPsiMethod = childMethodCall.resolveMethod();
         if (childPsiMethod != null && childPsiMethod.getContainingClass() == classToBuildTreeFor) {
-            if (methodAlreadyChecked(childPsiMethod)) {
-                // ToDo: Add info to method that it there is recursion
+            if (methodCallAlreadyChecked(childPsiMethod)) {
+                processRecursiveChild(childMethodCall, parentNode, childPsiMethod);
             } else {
-                CallGraphNode childNode = createNodeFromPsiMethod(childPsiMethod, childMethodCall);
-                parentNode.addChild(childNode);
-                buildTreeForCallHierarchy(childPsiMethod, childNode, classToBuildTreeFor);
+                currentPath.add(childPsiMethod);
+                processChildMethod(childPsiMethod, childMethodCall, parentNode, classToBuildTreeFor);
+                currentPath.remove(childPsiMethod);
             }
         }
     }
 
-    private static boolean methodAlreadyChecked(PsiMethod psiMethod) {
-        for (Method method : createdMethods) {
-            if (method.getPsiMethod() == psiMethod) {
+    private static boolean methodCallAlreadyChecked(PsiMethod psiMethod) {
+        for (PsiMethod existingParent : currentPath) {
+            if (psiMethod == existingParent) {
                 return true;
             }
         }
         return false;
+    }
+
+    private static void processRecursiveChild(PsiMethodCallExpression childMethodCall, CallGraphNode parentNode, PsiMethod childPsiMethod) {
+        CallGraphNode childNode = createNodeFromPsiMethod(childPsiMethod, childMethodCall);
+        parentNode.addChild(childNode);
+    }
+
+    private static void processChildMethod(PsiMethod childPsiMethod, PsiMethodCallExpression childMethodCall, CallGraphNode parentNode, PsiClass classToBuildTreeFor) {
+        CallGraphNode childNode = createNodeFromPsiMethod(childPsiMethod, childMethodCall);
+        parentNode.addChild(childNode);
+        buildTreeForCallHierarchy(childPsiMethod, childNode, classToBuildTreeFor);
     }
 
     private static boolean checkIfMethodCallIsOptional(PsiMethodCallExpression methodCall) {

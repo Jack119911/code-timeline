@@ -2,7 +2,6 @@ import call_graph.CallGraph;
 import call_graph.CallGraphGenerator;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.DumbService;
@@ -181,7 +180,7 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
         initContent(toolWindow);
         ColorService.initColors(getAllMethodNamesOfClass(Objects.requireNonNull(rootMethod.getContainingClass())));
         CallGraph callGraph = ProgressManager.getInstance().computePrioritized(
-                (ThrowableComputable<CallGraph, ProcessCanceledException>) () -> CallGraphGenerator.generateCallGraph((rootMethod))
+                    (ThrowableComputable<CallGraph, ProcessCanceledException>) () -> CallGraphGenerator.generateCallGraph((rootMethod))
         );
         callGraph.initVisualization(visualizationRootView);
     }

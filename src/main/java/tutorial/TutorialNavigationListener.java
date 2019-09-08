@@ -1,4 +1,4 @@
-package visualization;
+package tutorial;
 
 import com.intellij.ui.components.JBPanel;
 
@@ -6,12 +6,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TutorialNavigationListener implements ActionListener {
+class TutorialNavigationListener implements ActionListener {
 
     private JBPanel pages;
     private boolean next;
 
-    public TutorialNavigationListener(JBPanel pages, boolean next) {
+    TutorialNavigationListener(JBPanel pages, boolean next) {
         this.pages = pages;
         this.next = next;
     }

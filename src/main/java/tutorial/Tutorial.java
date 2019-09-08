@@ -1,17 +1,16 @@
+package tutorial;
+
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.openapi.ui.popup.JBPopupAdapter;
 import com.intellij.ui.components.*;
 import com.intellij.util.ui.JBImageIcon;
 import org.jetbrains.annotations.NotNull;
 import resources.Icons;
-import resources.Images;
-import resources.TutorialText;
-import visualization.TutorialNavigationListener;
+
 
 import javax.swing.*;
 import java.awt.*;
 
-class Tutorial {
+public class Tutorial {
 
     private static final int FONT_SIZE = 15;
     private static final int MARGIN_LEFT = 5;
@@ -19,11 +18,16 @@ class Tutorial {
 
     private Tutorial() {}
 
-    static JComponent getTutorialComponent() {
+    public static JComponent getTutorialComponent() {
         JBPanel pages = new JBPanel(new CardLayout());
-        pages.add(createTutorialPage(TutorialText.INTRO, Images.TUTORIAL_INTRODUCTION, pages));
-        pages.add(createTutorialPage("Test", Images.TUTORIAL_INTRODUCTION, pages));
+        addContent(pages);
         return pages;
+    }
+
+    private static void addContent(JBPanel pages) {
+        for (TutorialPageContentEntry entry : TutorialPageContent.content) {
+            pages.add(createTutorialPage(entry.getText(), entry.getImage(), pages));
+        }
     }
 
     @NotNull

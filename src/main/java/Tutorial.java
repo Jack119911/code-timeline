@@ -1,12 +1,12 @@
 import com.intellij.openapi.editor.ex.util.EditorUtil;
-import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBPanel;
-import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.components.JBTextArea;
+import com.intellij.openapi.ui.popup.JBPopupAdapter;
+import com.intellij.ui.components.*;
 import com.intellij.util.ui.JBImageIcon;
 import org.jetbrains.annotations.NotNull;
+import resources.Icons;
 import resources.Images;
 import resources.TutorialText;
+import visualization.TutorialNavigationListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,9 +20,18 @@ class Tutorial {
     private Tutorial() {}
 
     static JComponent getTutorialComponent() {
+        JBPanel pages = new JBPanel(new CardLayout());
+        pages.add(createTutorialPage(TutorialText.INTRO, Images.TUTORIAL_INTRODUCTION, pages));
+        pages.add(createTutorialPage("Test", Images.TUTORIAL_INTRODUCTION, pages));
+        return pages;
+    }
+
+    @NotNull
+    private static JComponent createTutorialPage(String text, Image image, JBPanel parent) {
         JBPanel panel = new JBPanel(new GridBagLayout());
-        panel.add(createText(TutorialText.INTRO), getTextConstraints());
-        panel.add(createPic(Images.TUTORIAL_INTRODUCTION), getPicConstraints());
+        panel.add(createText(text), getTextConstraints());
+        panel.add(createPic(image), getPicConstraints());
+        panel.add(createNavigation(parent), getNavigationConstraints());
         JBPanel wrapper = new JBPanel(new FlowLayout(FlowLayout.LEADING, MARGIN_LEFT, MARGIN_TOP));
         wrapper.add(panel);
         return new JBScrollPane(wrapper);
@@ -79,6 +88,28 @@ class Tutorial {
         constraints.gridwidth = 1;
         constraints.gridheight = 1;
         constraints.weightx = 0.5;
+        return constraints;
+    }
+
+    private static JComponent createNavigation(JBPanel parent) {
+        JBPanel wrapper = new JBPanel();
+        JButton left = new JButton(Icons.NAVIGATION_LEFT);
+        JButton right = new JButton(Icons.NAVIGATION_RIGHT);
+        left.addActionListener(new TutorialNavigationListener(parent, false));
+        right.addActionListener(new TutorialNavigationListener(parent, true));
+        wrapper.add(left);
+        wrapper.add(right);
+        return wrapper;
+    }
+
+    private static GridBagConstraints getNavigationConstraints() {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 1;
+        constraints.weightx = 0.1;
+        constraints.weighty = 0.1;
         return constraints;
     }
 

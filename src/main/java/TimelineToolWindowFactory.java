@@ -1,5 +1,6 @@
 import call_graph.CallGraph;
 import call_graph.CallGraphGenerator;
+import com.intellij.openapi.editor.ex.util.EditorUtil;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.progress.ProcessCanceledException;
@@ -12,6 +13,7 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
@@ -26,7 +28,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static java.awt.Font.*;
+
 public class TimelineToolWindowFactory implements ToolWindowFactory {
+
+    private static final int TITLE_SIZE = 20;
 
     private static class NoMethodToVisualizeException extends Exception {
         NoMethodToVisualizeException(String message) {
@@ -34,8 +40,7 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
         }
     }
 
-    private static final int MARGIN_LEFT = 10;
-    private static final int MARGIN_TOP = 10;
+    private static final int MARGIN = 10;
     private static final String MARKER_FOR_ROOT_METHOD = "VisualizationRoot";
     private static final String VISUALIZATION_DISPLAY_NAME = "Visualization";
     private static final String TUTORIAL_DISPLAY_NAME = "Tutorial";
@@ -159,13 +164,52 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
         return false;
     }
 
-    private void initContent(ToolWindow toolWindow) {
+    private void initContent(ToolWindow toolWindow, String methodName, String className) {
         visualizationRootView = new JBPanel(new GridBagLayout());
-        JBPanel wrapper = new JBPanel(new FlowLayout(FlowLayout.LEADING, MARGIN_LEFT, MARGIN_TOP));
-        wrapper.add(visualizationRootView);
+        JBPanel wrapper = new JBPanel(new GridBagLayout());
+        wrapper.setBorder(BorderFactory.createEmptyBorder(MARGIN, MARGIN, MARGIN, MARGIN));
+        wrapper.add(createTitle(methodName, className), getTitleConstraints());
+        wrapper.add(visualizationRootView, getVisualizationConstraints());
         JBScrollPane scrollPane = new JBScrollPane(wrapper);
         replaceVisualizationContent(scrollPane, toolWindow.getContentManager());
         toolWindow.show(null);
+    }
+
+    @NotNull
+    private JComponent createTitle(String methodName, String className) {
+        JPanel wrapper = new JPanel();
+        wrapper.add(createTitleLabel("Methods of the class", PLAIN));
+        wrapper.add(createTitleLabel(className, ITALIC));
+        wrapper.add(createTitleLabel("directly and indirectly called by", PLAIN));
+        wrapper.add(createTitleLabel(methodName, ITALIC));
+        wrapper.add(createTitleLabel("()", PLAIN));
+        return wrapper;
+    }
+
+    private JBLabel createTitleLabel(String text, int fontStyle) {
+        JBLabel label = new JBLabel(text);
+        label.setFont(new Font(EditorUtil.getEditorFont().getName(), fontStyle, TITLE_SIZE));
+        return label;
+    }
+
+    private GridBagConstraints getTitleConstraints() {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 1;
+        constraints.weighty = 0.1;
+        return constraints;
+    }
+
+    private GridBagConstraints getVisualizationConstraints() {
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        constraints.gridwidth = 1;
+        constraints.gridheight = 1;
+        constraints.weighty = 0.9;
+        return constraints;
     }
 
     private void replaceVisualizationContent(JComponent componentToAdd, ContentManager contentManager) {
@@ -178,8 +222,9 @@ public class TimelineToolWindowFactory implements ToolWindowFactory {
     }
 
     void visualizeCallHierarchy(ToolWindow toolWindow, PsiMethod rootMethod) {
-        initContent(toolWindow);
-        ColorService.initColors(getAllMethodNamesOfClass(Objects.requireNonNull(rootMethod.getContainingClass())));
+        PsiClass classToVisualize = Objects.requireNonNull(rootMethod.getContainingClass());
+        initContent(toolWindow, rootMethod.getName(), classToVisualize.getName());
+        ColorService.initColors(getAllMethodNamesOfClass(classToVisualize));
         CallGraph callGraph = ProgressManager.getInstance().computePrioritized(
                     (ThrowableComputable<CallGraph, ProcessCanceledException>) () -> CallGraphGenerator.generateCallGraph((rootMethod))
         );

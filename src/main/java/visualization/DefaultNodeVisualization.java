@@ -12,16 +12,22 @@ import visualization.interaction.MethodNavigationController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 
-public class DefaultNodeVisualization extends NodeVisualization implements IsHighlightedListener {
+public class DefaultNodeVisualization extends NodeVisualization implements IsHighlightedListener, ComponentListener {
 
     private static final int HEIGHT = 40;
     private static final int FONT_SIZE = 17;
     private static final int TEXT_VERTICAL_OFFSET = (HEIGHT - FONT_SIZE) / 2 + 2;
+    private static final int MAXIMAL_WIDTH_PER_ONE_LABEL = 1500;
     private static final String CONDITION_TOOL_TIP_TEXT = "A condition controls whether the method is called or not";
     private static final String LOOP_TOOL_TIP_TEXT = "The method may be called multiple times, because it is surrounded by a loop";
     private static final String RECURSION_TOOL_TIP_TEXT = "Recursion: This method calls itself directly or indirectly";
     private JBPanel panel;
+    private JBPanel labelWrapper;
+    private int widthForSingleLabel;
+    private boolean adjustedNumberOfLabels = false;
 
     public DefaultNodeVisualization(Method method, boolean callIsOptional, boolean calledMultipleTimes) {
         super(method, callIsOptional, calledMultipleTimes);
@@ -30,7 +36,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     @Override
     protected void createComponent() {
         createPanel();
-        createMethodNameLabel();
+        createMethodNameLabels(1, 0);
         createIcons();
         initListeners();
     }
@@ -42,15 +48,21 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
         addInteraction(panel, true, true, false);
     }
 
-    private void createMethodNameLabel() {
-        JBPanel wrapper = new JBPanel(new FlowLayout(FlowLayout.CENTER, 0, TEXT_VERTICAL_OFFSET)).andTransparent();
+    private void createMethodNameLabels(int numOfLabels, int gapBetweenLabels) {
+        if (labelWrapper != null) {
+            panel.remove(labelWrapper);
+        }
+        labelWrapper = new JBPanel(new FlowLayout(FlowLayout.CENTER, gapBetweenLabels, TEXT_VERTICAL_OFFSET)).andTransparent();
 
-        JBLabel methodNameLabel = new JBLabel(method.getName() + "()");
-        methodNameLabel.setFont(new Font(EditorUtil.getEditorFont().getName(), Font.PLAIN, FONT_SIZE));
-        addInteraction(methodNameLabel, true, true, true);
-        wrapper.add(methodNameLabel);
+        for (int i = 1; i <= numOfLabels; i++) {
+            JBLabel methodNameLabel = new JBLabel(method.getName() + "()");
+            methodNameLabel.setFont(new Font(EditorUtil.getEditorFont().getName(), Font.PLAIN, FONT_SIZE));
+            addInteraction(methodNameLabel, true, true, true);
+            labelWrapper.add(methodNameLabel);
+            widthForSingleLabel = methodNameLabel.getPreferredSize().width;
+        }
 
-        panel.add(wrapper, BorderLayout.CENTER);
+        panel.add(labelWrapper, BorderLayout.CENTER);
     }
 
     private void createIcons() {
@@ -66,7 +78,6 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
         if (method.isRecursive()) {
             addIcon(Icons.RECURSION, wrapper, spaceRight, RECURSION_TOOL_TIP_TEXT);
         }
-        System.out.println(method);
 
         panel.add(wrapper, BorderLayout.LINE_START);
         panel.add(spaceRight, BorderLayout.LINE_END);
@@ -82,6 +93,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
 
     private void initListeners() {
         method.getIsHighlighted().addListener(this);
+        panel.addComponentListener(this);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -105,4 +117,35 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
         return panel;
     }
 
+    @Override
+    public void componentResized(ComponentEvent componentEvent) {
+        if (!adjustedNumberOfLabels) {
+            adjustNumberOfLabels();
+            adjustedNumberOfLabels = true;
+        }
+    }
+
+    private void adjustNumberOfLabels() {
+        int width = panel.getWidth();
+        int numOfLabels = (width / MAXIMAL_WIDTH_PER_ONE_LABEL) + 1;
+        int widthForAllLabels = numOfLabels * widthForSingleLabel;
+        int spaceToDistribute = width - widthForAllLabels;
+        int spaceBetweenLabels = spaceToDistribute / (numOfLabels + 1);
+        createMethodNameLabels(numOfLabels, spaceBetweenLabels);
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent componentEvent) {
+        // Do nothing
+    }
+
+    @Override
+    public void componentShown(ComponentEvent componentEvent) {
+        // Do nothing
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent componentEvent) {
+        // Do nothing
+    }
 }

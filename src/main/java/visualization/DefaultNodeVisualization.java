@@ -20,6 +20,7 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
     private static final int TEXT_VERTICAL_OFFSET = (HEIGHT - FONT_SIZE) / 2 + 2;
     private static final String CONDITION_TOOL_TIP_TEXT = "A condition controls whether the method is called or not";
     private static final String LOOP_TOOL_TIP_TEXT = "The method may be called multiple times, because it is surrounded by a loop";
+    private static final String RECURSION_TOOL_TIP_TEXT = "Recursion: This method calls itself directly or indirectly";
     private JBPanel panel;
 
     public DefaultNodeVisualization(Method method, boolean callIsOptional, boolean calledMultipleTimes) {
@@ -57,11 +58,15 @@ public class DefaultNodeVisualization extends NodeVisualization implements IsHig
         JBPanel spaceRight = new JBPanel().andTransparent();
 
         if (callIsOptional) {
-            addIcon(Icons.CONDITION_ICON, wrapper, spaceRight, CONDITION_TOOL_TIP_TEXT);
+            addIcon(Icons.CONDITION, wrapper, spaceRight, CONDITION_TOOL_TIP_TEXT);
         }
         if (calledMultipleTimes) {
-            addIcon(Icons.LOOP_ICON, wrapper, spaceRight, LOOP_TOOL_TIP_TEXT);
+            addIcon(Icons.LOOP, wrapper, spaceRight, LOOP_TOOL_TIP_TEXT);
         }
+        if (method.isRecursive()) {
+            addIcon(Icons.RECURSION, wrapper, spaceRight, RECURSION_TOOL_TIP_TEXT);
+        }
+        System.out.println(method);
 
         panel.add(wrapper, BorderLayout.LINE_START);
         panel.add(spaceRight, BorderLayout.LINE_END);

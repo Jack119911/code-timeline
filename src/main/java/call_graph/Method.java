@@ -7,6 +7,7 @@ public class Method {
 
     private final PsiMethod psiMethod;
     private final IsHighlightedObservable isHighlighted = new IsHighlightedObservable(false);
+    private boolean isRecursive = false;
 
     Method(PsiMethod psiMethod){
         this.psiMethod = psiMethod;
@@ -28,4 +29,11 @@ public class Method {
         return psiMethod;
     }
 
+    public boolean isRecursive() {
+        return isRecursive;
+    }
+
+    void setRecursive(boolean recursive) {
+        isRecursive = recursive;
+    }
 }

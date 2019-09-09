@@ -11,7 +11,7 @@ class CallGraphNode {
     private final Method method;
     private final boolean callIsOptional;
     private final boolean calledMultipleTimes;
-    private final NodeVisualization visualization;
+    private NodeVisualization visualization;
     private int necessarySpace;
     private int paddingUnitsLeft;
     private int paddingUnitsRight;
@@ -20,7 +20,6 @@ class CallGraphNode {
         this.method = method;
         this.callIsOptional = callIsOptional;
         this.calledMultipleTimes = calledMultipleTimes;
-        this.visualization = new DefaultNodeVisualization(method, callIsOptional, calledMultipleTimes);
     }
 
     ArrayList<CallGraphNode> getChildren() {
@@ -36,6 +35,9 @@ class CallGraphNode {
     }
 
     NodeVisualization getVisualization() {
+        if (visualization == null) {
+            visualization = new DefaultNodeVisualization(method, callIsOptional, calledMultipleTimes);
+        }
         return visualization;
     }
 

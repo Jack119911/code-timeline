@@ -78,6 +78,7 @@ public class CallGraphGenerator {
     private static void processRecursiveChild(PsiMethodCallExpression childMethodCall, CallGraphNode parentNode, PsiMethod childPsiMethod) {
         CallGraphNode childNode = createNodeFromPsiMethod(childPsiMethod, childMethodCall);
         parentNode.addChild(childNode);
+        getMethodFromPsiMethod(childPsiMethod).setRecursive(true);
     }
 
     private static void processChildMethod(PsiMethod childPsiMethod, PsiMethodCallExpression childMethodCall, CallGraphNode parentNode, PsiClass classToBuildTreeFor) {

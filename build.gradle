@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'de.ur.mi'
-version '0.2'
+version '0.3'
 
 sourceCompatibility = 1.8
 
@@ -23,5 +23,5 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-      Now with change notes"""
+      This will be the initial release of the plugin. Now featuring change notes"""
 }

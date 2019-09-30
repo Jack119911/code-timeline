@@ -9,6 +9,8 @@
     The plugin targets novice programmers to improve their code-comprehension.
     ]]></description>
 
+    <change-notes>This will be the initial release of the plugin. Now featuring change notes</change-notes>
+
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <!-- uncomment to enable plugin in all products
